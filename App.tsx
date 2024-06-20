@@ -42,8 +42,8 @@ const App: React.FC<any> = () => {
   };
 
   const resetConfirmation = () => {
+    playSound(clickSound);
     if (count > 0) {
-      playSound(clickSound);
 
       Alert.alert(
         'Reset Counter',
