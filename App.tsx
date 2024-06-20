@@ -1,17 +1,41 @@
 /* eslint-disable prettier/prettier */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Alert, StyleSheet, Text, TouchableOpacity, Vibration, View } from 'react-native';
+import Sound from 'react-native-sound';
 
 const App: React.FC<any> = () => {
   const [count, setCount] = useState(0);
+  const [clickSound, setClickSound] = useState<any>(null);
+
+  const playSound = (sound: any) => {
+    if (sound) {
+      sound.play();
+    }
+  };
+
+  useEffect(() => {
+    const soundEffect = new Sound('click.mp3', Sound.MAIN_BUNDLE, (error) => {
+      if (error) {
+        console.log('failed to load sound', error);
+      } else {
+        setClickSound(soundEffect);
+      }
+    });
+
+    return () => {
+      soundEffect.release();
+    };
+  }, []);
 
   const increment = () => {
+    playSound(clickSound);
     Vibration.vibrate(100);
     setCount(count + 1);
   };
 
   const decrement = () => {
     if (count > 0) {
+      playSound(clickSound);
       Vibration.vibrate(100);
       setCount(count - 1);
     }
@@ -19,6 +43,8 @@ const App: React.FC<any> = () => {
 
   const resetConfirmation = () => {
     if (count > 0) {
+      playSound(clickSound);
+
       Alert.alert(
         'Reset Counter',
         'Are you sure you want to reset the counter to 0?',
